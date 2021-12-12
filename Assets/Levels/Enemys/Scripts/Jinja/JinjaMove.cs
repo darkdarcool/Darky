@@ -8,9 +8,12 @@ public class JinjaMove : MonoBehaviour
 
     private bool isRight;
     public Transform groundCheck;
+    public Transform killCheck;
     public LayerMask whatIsGround;
+    public LayerMask whatIsPlayer;
 
     private bool isGrounded = true; // Setting to true may cause jank
+    private bool shouldKill;
     public float speed = 10.0f;
     private bool isFirst = true;
     public float deathX;
@@ -24,7 +27,9 @@ public class JinjaMove : MonoBehaviour
     void Update()
     {
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.5f, whatIsGround);
-        
+        shouldKill = Physics2D.OverlapCircle(killCheck.position, 0.5f, whatIsPlayer);
+
+        if (shouldKill) KillSelf();
         // Move sprite left or right
         if (!isGrounded)
         {
@@ -55,5 +60,10 @@ public class JinjaMove : MonoBehaviour
         {
             col.transform.position = new Vector3(deathX, deathY);
         } 
+    }
+
+    void KillSelf()
+    {
+        Destroy(gameObject);
     }
 }
